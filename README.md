@@ -16,13 +16,13 @@ being PC in 2026 these nodes are for you.
 
 I can't rewrite every node pack out there and keep up with the nightly update 
 schedule, but its not necessary to do so we just need alternatives that are
-optimised for mps usage generally PC centric nodes are all about keeping as 
+optimised for mps usage. Generally PC centric nodes are all about keeping as 
 little as possible in VRAM and switching out to RAM whenever possible, 
 This involves copying GB's of  data over the PCI Bus back and forth. CUDA is
 very  fast but it has to wait for this shuffling around, meanwhile we have 
 Apple Silicon and the metal performance shaders. 
 
-Apple Silicon its all the same memory, its not a swop its deciding who does 
+Apple Silicon its all the same memory, its not a swap its deciding who does 
 the job. so when they say no CUDA ok fall back to CPU because they didnt even 
 check for MPS. We are getting stitched up. This AI work is pretty much always
 best performed by the GPU.     
@@ -38,11 +38,12 @@ It's easy to have most of a 2TB drive full of models. Avoid fp8 like the plague
 its not apple native, and usually crashes. Be realistic you cant really load 
 massive models if you havent got the unified ram for it. Worst i have hit
 is something like 150GB in use (with 75GB of swop and thats not good for 
-that internal SSD ideally you want no swop but 4 or 5 gb is pretty reasonable. 
-in activitity monitor getting into the orange for ram is ok but you don't want 
+that internal SSD) ideally you want no swop but 4 or 5 gb is pretty reasonable. 
+in Activity Monitor getting into the orange for ram is ok but you don't want 
 to be in the red much if at all. As comfyui runs as a server you can access it
-remotely so maybe monitor or operate it with another system and you don't have chrome eating up your ram, safari is better on ram but if you are 
-squeezed, you want to avoid unnecessary overhead.   
+remotely so maybe monitor or operate it with another system and you don't have 
+chrome eating up your ram, safari is better on ram but if you are squeezed, 
+you want to avoid unnecessary overhead.   
 
 The Strategy: Surgical Augmentation
 
@@ -50,7 +51,7 @@ Silicon-Implants is not a "catch-all" node pack:
 
 It is a lean repository of high-performance alternatives designed to "augment"
 your existing setup, not replace it. For example the free Gemma APi key node
-is hard coded to return back to a cuda enabled PC it doesn't need to be and 
+is hard coded to return back to a cuda enabled PC. it doesn't need to be and 
 thats the first node in this pack.  
  
 Targeted: Only specific alternatives for bottleneck nodes (Loaders,
