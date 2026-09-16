@@ -24,6 +24,39 @@ Efficiency-First: If it isn't slow, we don't touch it.
 Plug & Play: Keep your favorite "pig" repos; just swap in these [MPS]
 native versions where it counts.
 
+The Nodes
+
+CLIPLoader (GGUF) [MPS] -- CLIPLoaderGGUFMPS
+Wraps city96/ComfyUI-GGUF's CLIPLoaderGGUF and pins load_device,
+offload_device, and initial_device to MPS instead of letting them fall
+back to CPU. On Apple Silicon, text_encoder_device() and
+text_encoder_offload_device() only return the GPU device for
+HIGH_VRAM/NORMAL_VRAM (or --gpu-only) -- but cpu_state == CPUState.MPS
+always forces vram_state = VRAMState.SHARED, so stock CLIP loaders
+quietly run the whole text encoder forward pass on CPU. This one
+doesn't. Cut a Krea2 GGUF text encode from ~5 minutes to under a minute
+on an M-series Mac.
+
+Loads both formats: .gguf checkpoints go through gguf_clip_loader,
+everything else (regular .safetensors) goes through
+comfy.utils.load_torch_file -- same as the stock loader. Scaled-FP8
+safetensors aren't supported (raises NotImplementedError instead of
+silently doing the wrong thing), same limitation as upstream
+ComfyUI-GGUF. Requires ComfyUI-GGUF to be installed and enabled; this
+node wraps it, it doesn't replace it. Effectively a drop-in swap for
+CLIPLoader / DualCLIPLoader / CLIPLoaderGGUF wherever you're loading a
+text encoder for image/video generation on Apple Silicon.
+
+Gemma API Encode [MPS] -- GemmaMPSAugmentation
+Talks to the LTX-2 API for prompt-embedding conditioning and remaps
+the returned CUDA storage tensors so they unpickle correctly on Mac.
+
+Image + String Bridge -- LTX2PassThrough
+General-purpose pass-through: takes an image and a string (e.g. a
+filename or label) and hands them back unchanged. Useful for keeping
+the two traveling together through a graph, or as a stable junction
+point. Not MPS-specific -- just a small utility that lives here.
+
 Real-World Silicon Tips
 Avoid FP8: It’s not Apple-native and usually crashes.
 
