@@ -80,6 +80,14 @@ class CLIPLoaderGGUFMPS:
             embedding_directory=folder_paths.get_folder_paths("embeddings"),
         )
         clip.patcher = gguf_nodes.GGUFModelPatcher.clone(clip.patcher)
+
+        if clip.patcher.load_device != device:
+            logger.warning(
+                f"Silicon-Implants: CLIPLoaderGGUFMPS fell back to "
+                f"{clip.patcher.load_device} instead of {device} -- this node needs "
+                f"an update (upstream comfy.sd.CLIP's device handling likely changed)."
+            )
+
         return (clip,)
 
 
